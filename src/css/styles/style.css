@@ -8251,10 +8251,8 @@ KEEN SLIDER AND ARROWS
   overflow: hidden; 
 }
 
-#section-items .position-relative,
-#section-items .col-lg-12 {
-  padding-left: 0;
-  padding-right: 0;
+.keen-slider {
+  position: relative
 }
 
 #section-items .keen-slider__slide .nft__item {
