@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
 
 const TopSellers = () => {
+  const [sellers, setSellers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(
+          "https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers"
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setSellers(data);
+        setError(null);
+      } catch (e) {
+        setError(e.message);
+        setSellers([]);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) return <p>Loading top sellers...</p>;
+  if (error) return <p>Error loading top sellers: {error}</p>;
+
   return (
     <section id="section-popular" className="pb-5">
       <div className="container">
@@ -13,23 +38,27 @@ const TopSellers = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
+
           <div className="col-md-12">
             <ol className="author_list">
-              {new Array(12).fill(0).map((_, index) => (
-                <li key={index}>
+              {sellers.map((seller) => (
+                <li key={seller.id}>
                   <div className="author_list_pp">
-                    <Link to="/author">
+                    <Link to={`/author/${seller.authorId}`}>
                       <img
                         className="lazy pp-author"
-                        src={AuthorImage}
-                        alt=""
+                        src={seller.authorImage}
+                        alt={seller.authorName}
                       />
                       <i className="fa fa-check"></i>
                     </Link>
                   </div>
+
                   <div className="author_list_info">
-                    <Link to="/author">Monica Lucas</Link>
-                    <span>2.1 ETH</span>
+                    <Link to={`/author/${seller.authorId}`}>
+                      {seller.authorName}
+                    </Link>
+                    <span>{seller.price} ETH</span>
                   </div>
                 </li>
               ))}
