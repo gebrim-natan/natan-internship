@@ -14,6 +14,9 @@ const Explore = () => {
 
         <section
           id="subheader"
+          data-aos="fade-in"
+          data-aos-delay="50"
+          data-aos-duration="1000"
           className="text-light"
           style={{ background: `url("${SubHeader}") top` }}
         >
@@ -30,7 +33,10 @@ const Explore = () => {
         </section>
 
         <section aria-label="section">
-          <div className="container">
+          <div className="container"
+          data-aos="fade-up"
+          data-aos-delay="50"
+          data-aos-duration="1000">
             <div className="row">
               <ExploreItems />
             </div>
