@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
+import Skeleton from "../UI/Skeleton";
 
 const HotCollections = () => {
   const [hotCollections, setHotCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [sliderRef, slider] = useKeenSlider({
     loop: true,
     slides: {
@@ -35,12 +37,14 @@ const HotCollections = () => {
         const response = await fetch(
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
         );
+
         if (!response.ok) {
           throw new Error(
             `This is an HTTP error: The status is ${response.status}`
           );
         }
-        let actualData = await response.json();
+
+        const actualData = await response.json();
         setHotCollections(actualData);
         setError(null);
       } catch (err) {
@@ -55,7 +59,49 @@ const HotCollections = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading collections...</p>;
+    return (
+      <section id="section-collections" className="no-bottom">
+        <div
+          className="container"
+          data-aos="fade-in"
+          data-aos-delay="50"
+          data-aos-duration="1000"
+        >
+          <div className="row align-items-center">
+            <div className="col-lg-12">
+              <div className="text-center">
+                <h2>Hot Collections</h2>
+                <div className="small-border bg-color-2"></div>
+              </div>
+            </div>
+
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="col-lg-3 col-md-6 col-sm-6 mb30">
+                <div className="nft_coll">
+                  <div className="nft_wrap">
+                    <Skeleton height="250px" borderRadius="12px" />
+                  </div>
+
+                  <div className="nft_coll_pp">
+                    <Skeleton
+                      width="50px"
+                      height="50px"
+                      borderRadius="50%"
+                      className="pp-coll"
+                    />
+                  </div>
+
+                  <div className="nft_coll_info">
+                    <Skeleton width="70%" height="24px" className="mb-2" />
+                    <Skeleton width="40%" height="18px" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   if (error) {
@@ -64,7 +110,12 @@ const HotCollections = () => {
 
   return (
     <section id="section-collections" className="no-bottom">
-      <div className="container">
+      <div
+        className="container"
+        data-aos="fade-in"
+        data-aos-delay="150"
+        data-aos-duration="1000"
+      >
         <div className="row align-items-center">
           <div className="col-lg-12">
             <div className="text-center">
@@ -72,6 +123,7 @@ const HotCollections = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
+
           <div className="col-lg-12 position-relative">
             <div ref={sliderRef} className="keen-slider">
               {hotCollections.map((collection) => (
@@ -86,6 +138,7 @@ const HotCollections = () => {
                         />
                       </Link>
                     </div>
+
                     <div className="nft_coll_pp">
                       <Link to={`/author/${collection.authorId}`}>
                         <img
@@ -94,8 +147,8 @@ const HotCollections = () => {
                           alt={`Author ${collection.authorId}`}
                         />
                       </Link>
-
                     </div>
+
                     <div className="nft_coll_info">
                       <Link to={`/explore?collection=${collection.code}`}>
                         <h4>{collection.title}</h4>
@@ -106,6 +159,7 @@ const HotCollections = () => {
                 </div>
               ))}
             </div>
+
             {slider && (
               <>
                 <button

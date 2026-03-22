@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import Countdown from "../UI/Countdown";
+import Skeleton from "../UI/Skeleton";
 
 const NewItems = () => {
   const [newItems, setNewItems] = useState([]);
@@ -48,12 +49,69 @@ const NewItems = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading items...</p>;
+  if (loading) {
+    return (
+      <section id="section-items" className="no-bottom">
+        <div
+          className="container"
+          data-aos="fade-in"
+          data-aos-delay="50"
+          data-aos-duration="1000"
+        >
+          <div className="row align-items-center">
+            <div className="col-lg-12">
+              <div className="text-center">
+                <h2>New Items</h2>
+                <div className="small-border bg-color-2"></div>
+              </div>
+            </div>
+
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="col-lg-3 col-md-6 col-sm-6">
+                <div className="nft__item">
+                  <div className="author_list_pp">
+                    <Skeleton
+                      width="50px"
+                      height="50px"
+                      borderRadius="50%"
+                    />
+                  </div>
+
+                  <Skeleton
+                    width="110px"
+                    height="28px"
+                    borderRadius="20px"
+                    className="mb-3"
+                  />
+
+                  <div className="nft__item_wrap">
+                    <Skeleton height="280px" borderRadius="12px" />
+                  </div>
+
+                  <div className="nft__item_info">
+                    <Skeleton width="75%" height="24px" className="mb-2" />
+                    <Skeleton width="35%" height="20px" className="mb-2" />
+                    <Skeleton width="25%" height="18px" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (error) return <p>Error loading items: {error}</p>;
 
   return (
     <section id="section-items" className="no-bottom">
-      <div className="container">
+      <div
+        className="container"
+        data-aos="fade-in"
+        data-aos-delay="150"
+        data-aos-duration="1000"
+      >
         <div className="row align-items-center">
           <div className="col-lg-12">
             <div className="text-center">
