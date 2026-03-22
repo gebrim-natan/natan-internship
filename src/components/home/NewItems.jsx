@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
+import Countdown from "../UI/Countdown";
 
 const NewItems = () => {
   const [newItems, setNewItems] = useState([]);
@@ -23,12 +24,16 @@ const NewItems = () => {
   });
 
   useEffect(() => {
-    (async () => {
+    async function fetchData() {
       try {
         const res = await fetch(
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
         );
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
         const data = await res.json();
         setNewItems(data);
         setError(null);
@@ -38,7 +43,9 @@ const NewItems = () => {
       } finally {
         setLoading(false);
       }
-    })();
+    }
+
+    fetchData();
   }, []);
 
   if (loading) return <p>Loading items...</p>;
@@ -75,6 +82,8 @@ const NewItems = () => {
                         <i className="fa fa-check"></i>
                       </Link>
                     </div>
+
+                    <Countdown expiryDate={item.expiryDate} />
 
                     <div className="nft__item_wrap">
                       <Link to={`/item-details/${item.nftId}`}>
