@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const Countdown = ({ expiryDate }) => {
-  function getTimeRemaining() {
+  const getTimeRemaining = useCallback(() => {
     const distance = expiryDate - new Date().getTime();
 
     if (distance <= 0) {
@@ -13,19 +13,21 @@ const Countdown = ({ expiryDate }) => {
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     return { hours, minutes, seconds };
-  }
+  }, [expiryDate]);
 
   const [timeRemaining, setTimeRemaining] = useState(getTimeRemaining());
 
   useEffect(() => {
     if (!expiryDate) return;
 
+    setTimeRemaining(getTimeRemaining());
+
     const interval = setInterval(() => {
       setTimeRemaining(getTimeRemaining());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [expiryDate]);
+  }, [expiryDate, getTimeRemaining]);
 
   if (!expiryDate || !timeRemaining) {
     return null;
